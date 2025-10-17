@@ -1,0 +1,79 @@
+Ray-Casting — Leçon (texte)
+=============================
+
+1) Définitions
+--------------
+- Ray-Casting : lancer de rayons depuis la position du joueur pour mesurer la distance aux murs
+  et construire un rendu 3D par colonnes (comme Wolfenstein).
+- FOV (Field Of View) : angle total du champ de vision (ex : 60°).
+- Rayon : droite partant du joueur à un angle donné. On lance un rayon par colonne d'écran.
+
+2) Principe pas à pas
+---------------------
+1. Mini-map (grille) : la map est une grille grid[y][x] (1=mur, 0=vide). Le joueur a une position (px,py)
+   et une orientation theta (en radians).
+2. Génération des angles : pour chaque colonne i ∈ [0..W-1] :
+     rel = (i / (W-1)) - 0.5
+     angle = theta + rel * FOV
+   (rel varie de -0.5 à +0.5, donc angle balaie le FOV).
+3. Raycast (DDA - Amanatides & Woo) : on avance cellule par cellule le long du rayon jusqu'à toucher un mur.
+   On récupère la distance l (distance le long du rayon) et le point d'impact (hx,hy).
+4. Correction fish-eye : calculer la distance perpendiculaire à l'écran :
+     delta = angle - theta
+     di = l * cos(delta)
+   Utiliser di (et non l) pour la projection afin d'éviter la distorsion (fish-eye).
+5. Projection plane (distance focale) : pour un écran de hauteur H (pixels),
+     D = (H / 2) / tan(FOV / 2)
+   Hauteur projetée d'un mur (en pixels) :
+     h = (wall_world_height / di) * D
+6. Dessin : pour la colonne i, tracer un segment vertical de hauteur h centré sur H/2.
+   Répéter pour toutes les colonnes.
+
+3) Pourquoi la correction fish-eye ?
+------------------------------------
+- Sans correction on utilise l (distance le long du rayon). Les rayons hors du centre mesurent des distances
+  plus grandes même si le mur est à la même distance perpendiculairement. Cela rend les murs sur les bords
+  plus petits → effet 'fish-eye' (courbure indésirable).
+- La correction di = l * cos(delta) prend la composante perpendiculaire au plan d'écran, supprimant l'effet.
+
+4) Formules utiles
+------------------
+- Angle par colonne : angle = theta + (i/(W-1)-0.5) * FOV
+- DDA (esquisse) : méthode efficace pour traverser une grille et détecter la première case murale.
+- Correction : di = l * cos(angle - theta)
+- Projection plane : D = (H/2) / tan(FOV/2)
+- Hauteur projetée : h = (wall_height / di) * D
+
+5) Pseudocode (C-like)
+-----------------------
+for (int col = 0; col < W; ++col) {
+    double rel = (double)col / (W - 1) - 0.5;
+    double angle = theta + rel * FOV;
+    bool hit = dda_cast(px, py, angle, &l, &hitx, &hity); // l = distance along ray
+    if (!hit) l = MAX_DIST;
+    double delta = angle - theta;
+    double di = l * cos(delta);
+    if (di < 1e-6) di = 1e-6;
+    double D = (H / 2.0) / tan(FOV / 2.0);
+    double h = (wall_height / di) * D;
+    draw_vertical_column(col, centerY - h/2, h);
+}
+
+6) Astuces pratiques
+--------------------
+- Utiliser DDA (Amanatides & Woo) : rapide et exact pour grilles.
+- Pour les textures : calculer tex_x depuis hitx/hity (selon face verticale/horizontale),
+  puis utiliser step = tex_h / h pour échantillonner la texture verticalement.
+- Ombres : atténuer la couleur selon di pour simuler l'éloignement.
+- Pour le raycast, faire 1 rayon par colonne donne un rendu authentique. Pour anti-aliasing,
+  faire plusieurs rays par colonne et moyenne des couleurs.
+
+7) Pièges communs
+------------------
+- Confondre FOV et FOV/2 pour la formule de D.
+- Ne pas convertir des int en double (division entière en C) avant les opérations trig.
+- Oublier la correction fish-eye.
+- Oublier de protéger contre di ≈ 0 (division par zéro).
+
+---
+Fichier généré automatiquement : 'raycasting_lesson.txt' (même contenu).

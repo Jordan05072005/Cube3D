@@ -1,0 +1,20 @@
+Ray-Casting
+
+Définition : 
+	FOV : Champ de vision, soit l'angle de ton champ de vision. +/-45 -> 90 en tout. 
+
+Principe : 1.On prend un point de vision (maps 2d, angles pi/2). On tire plein de laser, dans une fourcher dite FOV.
+	Ses lasers vont permettre de récupéré la distance entre le mur et le joueur. (pytagore)
+	À cette distance on applique une Fisheye Correction, eviter que deux trait sur un mur en face, si l'un est en léger diagonal qu'il est bien la même distance, sinon le trait a la diagonal sera plus long et nos mur seront arrondis.
+	C'est distant = distance * (angle - angle_player)
+	angle = angle du rayon en radiant
+	angle_player = angle de vision du joueur (en radiant)
+	2.Ensuite on applique cette formule h = (x / distance) * (h / 4 / tan(fov));
+		-> x = taille réel du bloc (mur) en 2d
+		-> h = hauteur de l'ecran
+		->fov = champ de vision
+	En gros, on commence par addapté la taille du mur selon sa distance (x / distance), puis on la mutiplie a taille 'réelle' avec (h / 2 / tan(fov/2))
+	Ensuite on par du millieu de l'ecran, et si on a bien autant de rayon que de pixel de long de l'ecran
+	On dessine h pixel, dont la moitier vers le haut et l'autre vers le bas en partant du millieu de l'ecran.
+La partie 2, ce nomme le Projection Plane Distance, video -> "https://youtu.be/ebzlMOw79Yw" c'est de la trigo en projection dans l'espace.
+	
