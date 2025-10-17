@@ -17,25 +17,25 @@ int	fill_tex(t_data *d)
 	d->tex[0].tex = mlx_xpm_file_to_image(d->mlx,
 			d->mdata->path_s, &d->tex[0].w, &d->tex[0].h);
 	if (!d->tex[0].tex)
-		return (write(2, "Erreur XPM\n", 11), 1);
+		return (write(2, "Erreur:\nXPM\n", 11), 1);
 	d->tex[0].data = mlx_get_data_addr(d->tex[0].tex,
 			&d->tex[0].bpp, &d->tex[0].size_line, &d->tex[0].endian);
 	d->tex[1].tex = mlx_xpm_file_to_image(d->mlx,
 			d->mdata->path_e, &d->tex[1].w, &d->tex[1].h);
 	if (!d->tex[1].tex)
-		return (write(2, "Erreur XPM\n", 11), 1);
+		return (write(2, "Erreur:\nXPM\n", 11), 1);
 	d->tex[1].data = mlx_get_data_addr(d->tex[1].tex,
 			&d->tex[1].bpp, &d->tex[1].size_line, &d->tex[1].endian);
 	d->tex[2].tex = mlx_xpm_file_to_image(d->mlx,
 			d->mdata->path_w, &d->tex[2].w, &d->tex[2].h);
 	if (!d->tex[2].tex)
-		return (write(2, "Erreur XPM\n", 11), 1);
+		return (write(2, "Erreur:\nXPM\n", 11), 1);
 	d->tex[2].data = mlx_get_data_addr(d->tex[2].tex,
 			&d->tex[2].bpp, &d->tex[2].size_line, &d->tex[2].endian);
 	d->tex[3].tex = mlx_xpm_file_to_image(d->mlx,
 			d->mdata->path_n, &d->tex[3].w, &d->tex[3].h);
 	if (!d->tex[3].tex)
-		return (write(2, "Erreur XPM\n", 11), 1);
+		return (write(2, "Erreur:\nXPM\n", 11), 1);
 	d->tex[3].data = mlx_get_data_addr(d->tex[3].tex,
 			&d->tex[3].bpp, &d->tex[3].size_line, &d->tex[3].endian);
 	return (0);
