@@ -67,6 +67,8 @@ int	parser(char *path, t_map_data *data, int lock)
 	int	fd;
 	int	ret;
 
+	if (ft_strncmp(&path[ft_strlen(path) - 4], ".cub", 4) != 0)
+		return (1);
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
 		return (1);

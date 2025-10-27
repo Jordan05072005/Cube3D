@@ -90,6 +90,7 @@ int	main(int argc, char **argv)
 		return (error_mess("Maps incorrect"), close_program(data), 1);
 	if (fill_info(data))
 		return (close_program(data), 1);
+	data->oldt = 0;
 	draw_minmaps(data->mdata, data);
 	mlx_hook(data->win, ON_KEYDOWN, 1L << 0, on_keydown, data);
 	mlx_hook(data->win, ON_KEYUP, 1L << 1, on_keyup, data);

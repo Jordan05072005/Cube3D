@@ -88,8 +88,8 @@ typedef struct s_map_data
 	double		vel;
 	int			hitbox;
 	double		fov;
-	double		orientation;
-	size_t		size_bloc[2];
+	float		orientation;
+	float		size_bloc[2];
 	float		co[2];
 	float		old_co[2];
 }					t_map_data;
@@ -117,8 +117,8 @@ typedef struct s_texture
 	char	*data;
 	int		bpp;
 	int		size_line;
-	int		x;
-	int		y;
+	float	x;
+	float	y;
 	int		w;
 	int		h;
 	int		endian;
@@ -147,6 +147,7 @@ typedef struct data
 	t_mini_map	*mini;
 	t_map_data	*mdata;
 	t_keys		keys;
+	int			oldt;
 }	t_data;
 
 // free.c

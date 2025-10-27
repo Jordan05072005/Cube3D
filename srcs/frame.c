@@ -21,7 +21,8 @@ void	my_mlx_pixel_put(t_img *img, t_tex *t, int x, t_data *d)
 	y = d->img->y;
 	if (x > (int)d->w || y > (int)d->h || x < 0 || y < 0)
 		return ;
-	color = *(int *)(t->data + t->y * t->size_line + t->x * (t->bpp / 8));
+	color = *(int *)(t->data + (int)t->y * t->size_line
+			+ (int)t->x * (t->bpp / 8));
 	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));
 	*(unsigned int *)dst = color;
 }

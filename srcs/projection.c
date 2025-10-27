@@ -39,31 +39,44 @@ void	draw_wall(t_data *d, t_casting *c, int x, t_tex tex)
 	}
 }
 
+void	norm(t_casting *c, t_data *d, double xy[2])
+{
+	c->sz[0] = d->mdata->size_bloc[0];
+	c->sz[1] = d->mdata->size_bloc[1];
+	c->lc[0] = fmod(xy[0], c->sz[0]);
+	c->lc[1] = fmod(xy[1], c->sz[1]);
+	if (c->lc[0] <= 0.0)
+		c->lc[0] += c->sz[0];
+	if (c->lc[1] <= 0.0)
+		c->lc[1] += c->sz[1];
+}
+
 t_tex	choise_tex(t_casting c, t_data *d, double xy[2], int t)
 {
-	c.sz[0] = d->mdata->size_bloc[0];
-	c.sz[1] = d->mdata->size_bloc[1];
-	c.lc[0] = fmod(xy[0], c.sz[0]);
-	c.lc[1] = fmod(xy[1], c.sz[1]);
-	if (c.lc[0] < 0.0)
-		c.lc[0] += c.sz[0];
-	if (c.lc[1] < 0.0)
-		c.lc[1] += c.sz[1];
-	if (fabs(c.lc[0]) < c.ray_step || fabs(c.lc[0] - c.sz[0]) < c.ray_step)
+	double	eps;
+
+	eps = 0.1;
+	norm(&c, d, xy);
+	if ((!(fabs(c.lc[1]) < eps) && !(fabs(c.lc[1] - c.sz[1]) < eps))
+		&& (fabs(c.lc[0]) < eps || fabs(c.lc[0] - c.sz[0]) < eps))
 	{
-		if (!(fabs(c.lc[0]) < c.ray_step))
-			t = (t + 2) % 4;
-		d->tex[t].x = (int)((c.lc[1] / c.sz[1]) * d->tex->w);
-	}
-	else
-	{
-		if (fabs(c.lc[1]) < c.ray_step)
-			t = (t + 1) % 4;
+		if (cos(c.angle) < 0)
+			t = 2;
 		else
-			t = (t + 3) % 4;
-		d->tex[t].x = (int)((c.lc[0] / c.sz[0]) * d->tex->w);
+			t = 1;
+		d->tex[t].x = (int)((c.lc[1] / c.sz[1]) * d->tex[t].w) % d->tex[t].w;
+	}
+	else if ((fabs(c.lc[1]) < eps || fabs(c.lc[1] - c.sz[1]) < eps)
+		&& (!(fabs(c.lc[0]) < eps) && !(fabs(c.lc[0] - c.sz[0]) < eps)))
+	{
+		if (sin(c.angle) < 0)
+			t = 3;
+		else
+			t = 0;
+		d->tex[t].x = (int)((c.lc[0] / c.sz[0]) * d->tex[t].w) % d->tex[t].w;
 	}
 	d->tex[t].y = 0;
+	d->oldt = t;
 	return (d->tex[t]);
 }
 
@@ -101,6 +114,6 @@ void	draw_projection(t_data *d)
 			c.pas -= (c.ray_step * 2);
 			c.ray_step = 0.1;
 		}
-		draw_wall(d, &c, x, choise_tex(c, d, xy, 0));
+		draw_wall(d, &c, x, choise_tex(c, d, xy, d->oldt));
 	}
 }

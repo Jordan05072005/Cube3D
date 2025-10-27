@@ -12,7 +12,7 @@
 
 #include "../includes/cub3D.h"
 
-void	draw_rect(size_t size[2], int yb, int xb, t_data *d)
+void	draw_rect(float size[2], int yb, int xb, t_data *d)
 {
 	size_t	x;
 	size_t	y;

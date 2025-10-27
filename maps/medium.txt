@@ -1,7 +1,7 @@
 NO tex/bookshelf.xpm
-SO tex/mossy_cobblestone.xpm
-WE tex/mycelium_top.xpm
-EA tex/texture.xpm
+SO tex/bookshelf.xpm
+WE tex/bookshelf.xpm
+EA tex/bookshelf.xpm
 
 F 184,113,39
 C 51,198,227
